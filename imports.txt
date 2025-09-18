@@ -1,0 +1,30 @@
+# Install all required packages
+!pip install streamlit langchain langchain-google-genai python-dotenv requests pyngrok pandas
+!pip install --upgrade langchain-google-genai google-generativeai
+
+# Create a .env file for storing API key
+%%writefile .env
+GOOGLE_API_KEY= "YOUR-API-KEY"   # Replace with your actual key
+
+
+
+import os
+from dotenv import load_dotenv
+import google.generativeai as genai
+
+# Load environment variables
+load_dotenv()
+
+# Get API key
+api_key = os.getenv("GOOGLE_API_KEY")
+genai.configure(api_key=api_key)
+
+
+# Copy the dataset from GCS to Colab's working dir
+!gsutil cp gs://e-comm-assist/online_sales_dataset.csv .
+
+# Load with pandas
+import pandas as pd
+orders_df = pd.read_csv("online_sales_dataset.csv")
+print("✅ Dataset loaded with", len(orders_df), "rows")
+orders_df.head()
