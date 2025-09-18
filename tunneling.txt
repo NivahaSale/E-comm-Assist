@@ -1,0 +1,19 @@
+from pyngrok import ngrok
+import threading, time, os
+
+# Kill previous tunnels if any
+ngrok.kill()
+
+# Authenticate ngrok
+ngrok.set_auth_token("YOUR-NGROK-AUTH-TOKEN")  # replace with your token
+
+# Run Streamlit in background
+def run_streamlit():
+    os.system("streamlit run app.py")
+
+threading.Thread(target=run_streamlit).start()
+time.sleep(5)
+
+# Expose public URL
+public_url = ngrok.connect(addr="8501", proto="http")
+print(f"🔗 Public App URL: {public_url}")
